@@ -1,0 +1,511 @@
+{
+  "name": "Automatización Embudo de Ventas",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "6257a758-2595-44c4-9b8c-4d5fcc26652d",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        256,
+        304
+      ],
+      "webhookId": "f56f061a-9a00-49f9-843c-b3308c1c7874",
+      "credentials": {
+        "telegramApi": {
+          "id": "pUBlf03gaijNQuf7",
+          "name": "CONTRU_BOT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1rE9Dq5P0P__fZoODZUGHTZjIefvzMtbYSe1KeTwGGx4",
+          "mode": "list",
+          "cachedResultName": "Constructora",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1rE9Dq5P0P__fZoODZUGHTZjIefvzMtbYSe1KeTwGGx4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 833020078,
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1rE9Dq5P0P__fZoODZUGHTZjIefvzMtbYSe1KeTwGGx4/edit#gid=833020078"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID Lead": "={{ $json.message.chat.id }}",
+            "Nombre": "={{ $json.message.chat.first_name }}",
+            "Origen": "telegram"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID Lead",
+              "displayName": "ID Lead",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "username",
+              "displayName": "username",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Origen",
+              "displayName": "Origen",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Terreno",
+              "displayName": "Terreno",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Presupuesto",
+              "displayName": "Presupuesto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Timing",
+              "displayName": "Timing",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Timestamp 1 (Entrada)",
+              "displayName": "Timestamp 1 (Entrada)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Timestamp 2 (Agendado)",
+              "displayName": "Timestamp 2 (Agendado)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "d7d168bc-4d35-4869-a09e-4cf52f6372e1",
+      "name": "Save Lead to Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        480,
+        304
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "v4OBAj59tQx8xOkG",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json['ID Lead'] }}",
+        "text": "=Gracias! Ya casi estamos... Por favor, completa este formulario. https://tally.so/r/2EkQEg?id_lead={{ $json['ID Lead'] }}",
+        "additionalFields": {}
+      },
+      "id": "b285c199-a35b-4f7d-9c79-3628fd46dccb",
+      "name": "Send Form URL",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        704,
+        304
+      ],
+      "webhookId": "2b438135-ee34-4120-8905-3ada6f8f4903",
+      "credentials": {
+        "telegramApi": {
+          "id": "pUBlf03gaijNQuf7",
+          "name": "CONTRU_BOT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tally-webhook",
+        "options": {}
+      },
+      "id": "f05352ff-0a57-4c48-8c66-fdd53dcf556a",
+      "name": "Tally Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        256,
+        624
+      ],
+      "webhookId": "fcb6a073-9223-4e96-8974-ffd363cede0a"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1rE9Dq5P0P__fZoODZUGHTZjIefvzMtbYSe1KeTwGGx4",
+          "mode": "list",
+          "cachedResultName": "Constructora",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1rE9Dq5P0P__fZoODZUGHTZjIefvzMtbYSe1KeTwGGx4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 833020078,
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1rE9Dq5P0P__fZoODZUGHTZjIefvzMtbYSe1KeTwGGx4/edit#gid=833020078"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Presupuesto": "={{ $json.body.data.fields[1].key }}",
+            "Timing": "=",
+            "ID Lead": "={{ $json.body.data.fields[4].value }}",
+            "username": "={{ $json.body.data.fields[3].value }}",
+            "Origen": "Telegram"
+          },
+          "matchingColumns": [
+            "ID Lead"
+          ],
+          "schema": [
+            {
+              "id": "ID Lead",
+              "displayName": "ID Lead",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "username",
+              "displayName": "username",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Origen",
+              "displayName": "Origen",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Terreno",
+              "displayName": "Terreno",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Presupuesto",
+              "displayName": "Presupuesto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Timing",
+              "displayName": "Timing",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Timestamp 1 (Entrada)",
+              "displayName": "Timestamp 1 (Entrada)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Timestamp 2 (Agendado)",
+              "displayName": "Timestamp 2 (Agendado)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "a01325c7-104a-4e26-add8-0ba449d87efd",
+      "name": "Update Lead in Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        480,
+        624
+      ],
+      "alwaysOutputData": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "v4OBAj59tQx8xOkG",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "id-1",
+              "leftValue": "=value[0]",
+              "rightValue": "d53c743e-2df9-48ee-9949-2b537a7c6aa4",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {
+          "ignoreCase": true
+        }
+      },
+      "id": "a1d77b73-961c-4b3b-8875-9c8e7e2a68af",
+      "name": "Check Budget",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        704,
+        624
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "8279349038",
+        "text": "🚨 ¡NUEVO LEAD VIP! Presupuesto alto confirmado. Revisa el Excel.",
+        "additionalFields": {}
+      },
+      "id": "327ba7a2-8756-4ceb-9b88-27ad6cd70562",
+      "name": "Notify VIP Lead",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        928,
+        528
+      ],
+      "webhookId": "7cbed381-9cff-43c1-8f32-b57d0e896ea6",
+      "credentials": {
+        "telegramApi": {
+          "id": "pUBlf03gaijNQuf7",
+          "name": "CONTRU_BOT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.body.fields.id_lead }}",
+        "text": "Gracias por completar el test. Nuestro equipo revisará tus datos y te contactaremos pronto.",
+        "additionalFields": {}
+      },
+      "id": "42ad92b8-058f-4226-8f7d-f955bf1274ed",
+      "name": "Thank User",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        928,
+        720
+      ],
+      "webhookId": "a2fac3a8-f087-4515-85a8-ef3b0a155feb",
+      "credentials": {
+        "telegramApi": {
+          "id": "pUBlf03gaijNQuf7",
+          "name": "CONTRU_BOT"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Save Lead to Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Lead to Sheets": {
+      "main": [
+        [
+          {
+            "node": "Send Form URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tally Trigger": {
+      "main": [
+        [
+          {
+            "node": "Update Lead in Sheets",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Check Budget",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Lead in Sheets": {
+      "main": [
+        []
+      ]
+    },
+    "Check Budget": {
+      "main": [
+        [
+          {
+            "node": "Notify VIP Lead",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Thank User",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "937142a7-9671-4949-8e8d-81b686ffb4c7",
+  "meta": {
+    "instanceId": "09e1305ff22fb8bb8b197d4a8be605b20ba459a85c0ad2edfc75c6f35b535bc6"
+  },
+  "id": "KrP3JyA1hvjTD7qh",
+  "tags": []
+}
